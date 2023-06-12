@@ -3,6 +3,9 @@ package com.example.project;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Xfermode;
 
 public interface Object {
     // 움직일 수 있는 판의 사이즈
@@ -22,6 +25,13 @@ public interface Object {
         Paint paint = new Paint();
 
         paint.setColor(Color.rgb(255,255,255));
+        g.drawCircle(x, y, diameter, paint);
+    }
+
+    default void clearObject(Canvas g){
+        Paint paint = new Paint();
+        Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+        paint.setXfermode(xmode);
         g.drawCircle(x, y, diameter, paint);
     }
 

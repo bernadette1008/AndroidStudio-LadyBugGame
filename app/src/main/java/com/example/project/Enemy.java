@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Xfermode;
 import android.widget.Toast;
 
 public class Enemy implements Object{
@@ -13,9 +14,12 @@ public class Enemy implements Object{
     int diameter;
     int WIDTH = 1280, HEIGHT = 1920;
 
+    int speed = 5;
+    float directionX, directionY;
+
     int hp = 1 * Game.stage;
 
-    public Enemy(int d, int width, int height){
+    public Enemy(int d, int width, int height, Player target){
         this.diameter = d;
         this.WIDTH = width;
         this.HEIGHT = height;
@@ -37,6 +41,17 @@ public class Enemy implements Object{
             y = (int) (Math.random() * (HEIGHT - d) + 3);
         }
 
+        float targetX = target.getPlayerX();
+        float targetY = target.getPlayerY();
+
+        float deltaX = targetX - this.x;
+        float deltaY = targetY - this.y;
+
+        float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+        this.directionX = deltaX / distance;
+        this.directionY = deltaY / distance;
+
         xInc = yInc = 5;
     }
 
@@ -50,20 +65,33 @@ public class Enemy implements Object{
 //            remove(g);
 //        }
 
-        float targetX = target.getPlayerX();
-        float targetY = target.getPlayerY();
+//        float targetX = target.getPlayerX();
+//        float targetY = target.getPlayerY();
 
-        if(targetX - this.x > 0){
-            x += xInc;
-        }else{
-            x -= xInc;
+//        if(targetX - this.x > 0){
+//            x += xInc;
+//        }else{
+//            x -= xInc;
+//        }
+//
+//        if(targetY - this.y > 0){
+//            y += yInc;
+//        }else{
+//            y -= yInc;
+//        }
+
+        this.x += this.directionX * this.speed;
+        this.y += this.directionY * this.speed;
+
+        if(this.x > WIDTH || this.x < 0){
+            clearObject(g);
+            return;
+        }
+        if(this.y > HEIGHT || this.y < 0) {
+            clearObject(g);
+            return;
         }
 
-        if(targetY - this.y > 0){
-            y += yInc;
-        }else{
-            y -= yInc;
-        }
 
         if(encounter(target))
             System.out.println("Game Over");
@@ -81,6 +109,14 @@ public class Enemy implements Object{
             return true;
 
         return false;
+    }
+
+    @Override
+    public void clearObject(Canvas g){
+        Paint paint = new Paint();
+        Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+        paint.setXfermode(xmode);
+        g.drawCircle(x, y, diameter, paint);
     }
 }
 

@@ -205,7 +205,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         private void drawGameScreen(Canvas c){
             if(elapsedTime >= spawnTime){
                 for (int i = 0; i < eCnt; i++){
-                    Enemy eny = new Enemy(50, width, height);
+                    Enemy eny = new Enemy(50, width, height, player);
                     enemies.add(eny);
                 }
                 elapsedTime = 0;
