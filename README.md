@@ -15,11 +15,17 @@ START 버튼을 통해 게임을 시작하고, SCORE 버튼을 통해서는 자�
 적과 플레이어의 접촉 이벤트
 사망 화면
 
-https://github.com/bernadette1008/AndroidStudio-LadyBug.git
+![image](https://github.com/bernadette1008/AndroidStudio-LadyBugGame/assets/103907857/43b29024-bf99-4f3b-af33-09d5132bdb44)
 
-https://github.com/bernadette1008/AndroidStudio-LadyBug.git
+시작 화면
 
-https://github.com/bernadette1008/AndroidStudio-LadyBug.git
+![image](https://github.com/bernadette1008/AndroidStudio-LadyBugGame/assets/103907857/0149fa90-b129-4898-b379-9e4af2b2dda4)
+
+적의 추척
+
+![image](https://github.com/bernadette1008/AndroidStudio-LadyBugGame/assets/103907857/7e649d49-6b24-4923-b710-f5d9017f8463)
+
+게임 오버 화면
 
 현재는 테스트겸 스와이프를 통해 플레이어를 조작하도록 설정해놨다.
 
