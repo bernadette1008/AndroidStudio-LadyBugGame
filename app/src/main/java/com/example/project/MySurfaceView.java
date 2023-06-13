@@ -22,7 +22,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     private Timer timer;
 
-    TimerTask timerTask = new TimerTask() {
+    TimerTask scoreTask = new TimerTask() {
         @Override
         public void run() {
             score++;
@@ -30,17 +30,40 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
     };
 
+    TimerTask enemySpawn = new TimerTask(){
+        @Override
+        public void run(){
+            for (int i = 0; i < eCnt; i++){
+                Enemy eny = new Enemy(50, width, height, player);
+                enemies.add(eny);
+            }
+        }
+    };
+
+    TimerTask itemSpawn = new TimerTask() {
+        @Override
+        public void run() {
+            Item item = new Item(50, width, height);
+            items.add(item);
+        }
+    };
+
+    public void setTimerTask(Timer t, TimerTask task, long delay, long period){
+        t.schedule(task, delay, period);
+    }
+
     private boolean isGameOver = false;
 
     static int eCnt = 6;
     public static List<Enemy> enemies;
+    public static List<Item> items;
 
     private MyThread thread;
 
     private Player player;
 
-    long spawnTime = 3000; // 잡몹 소환
-    long itemSpawnTime = 5000;
+    long spawnTime = 5000; // 잡몹 소환
+    long itemSpawnTime = 7000;
     long elapsedTime = 0; // 경과 시간
     long startTime = System.currentTimeMillis(); // 시작시간
 
@@ -74,24 +97,34 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             }
         });
 
+        width = getScreenWidth(context);
+        height = getScreenHeight(context);
+
+        //플레이어 생성
+        player = new Player(50, width, height, width/2, height/2);
+
+        System.out.println("width : "+ width + " height : "+ height);
+
+        enemies = new ArrayList<>();
+        items = new ArrayList<>();
+
         score = 0;
         timer = new Timer();
-        timer.schedule(timerTask,0, 100);
+//        timer.schedule(scoreTask,0, 100);
+        setTimerTask(timer, scoreTask, 0, 100);
+        setTimerTask(timer, enemySpawn, 0, spawnTime);
+        setTimerTask(timer, itemSpawn, 0, itemSpawnTime);
 
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
 
         thread = new MyThread(holder);
 
-        enemies = new ArrayList<>();
 
-        width = getScreenWidth(context);
-        height = getScreenHeight(context);
 
-        System.out.println("width : "+ width + " height : "+ height);
 
-        //플레이어 생성
-        player = new Player(50, width, height, width/2, height/2);
+
+
     }
 
     @Override
@@ -161,9 +194,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         public void run(){
             while (mRun){
                 Canvas c = null;
-                long currentTime = System.currentTimeMillis();
-                elapsedTime += currentTime - startTime;
-                startTime = currentTime;
+//                long currentTime = System.currentTimeMillis();
+//                elapsedTime += currentTime - startTime;
+//                startTime = currentTime;
                 Paint p = new Paint();
 
                 int randSpawnCnt = (int) (Math.random() * 5 + 1);
@@ -198,19 +231,31 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
 
         private void drawGameScreen(Canvas c){
-            if(elapsedTime >= spawnTime){
-                for (int i = 0; i < eCnt; i++){
-                    Enemy eny = new Enemy(50, width, height, player);
-                    enemies.add(eny);
-                }
-                elapsedTime = 0;
-            }
-            Iterator<Enemy> iterator = enemies.iterator();
-            while(iterator.hasNext()){
-                Enemy enemy = iterator.next();
+//            if(elapsedTime >= spawnTime){
+//                for (int i = 0; i < eCnt; i++){
+//                    Enemy eny = new Enemy(50, width, height, player);
+//                    enemies.add(eny);
+//                }
+//                elapsedTime = 0;
+//            }
+            Iterator<Enemy> enemyIterator = enemies.iterator();
+            while(enemyIterator.hasNext()){
+                Enemy enemy = enemyIterator.next();
                 enemy.paintObject(c, player);
+                
+                //플레이어가 적과 닿았을 때
                 if(enemy.encounter(player)){
                     isGameOver = true;
+                }
+            }
+            Iterator<Item> itemIterator = items.iterator();
+            while(itemIterator.hasNext()){
+                Item item = itemIterator.next();
+                item.paintObject(c, player);
+                
+                //플레이어가 아이템을 먹었을 때
+                if(item.encounter(player)){
+                    item.clearObject(c);
                 }
             }
             if(player != null){

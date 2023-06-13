@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class Enemy implements Object{
     float x, y;
-    int xInc = 1, yInc = 1;
+
     int diameter;
     int WIDTH = 1280, HEIGHT = 1920;
 
@@ -49,8 +49,6 @@ public class Enemy implements Object{
 
         this.directionX = deltaX / distance;
         this.directionY = deltaY / distance;
-
-        xInc = yInc = 5;
     }
 
     @Override
@@ -111,10 +109,11 @@ public class Enemy implements Object{
 
     @Override
     public void clearObject(Canvas g){
-        Paint paint = new Paint();
-        Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
-        paint.setXfermode(xmode);
-        g.drawCircle(x, y, diameter, paint);
+//        Paint paint = new Paint();
+//        Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+//        paint.setXfermode(xmode);
+//        g.drawCircle(x, y, diameter, paint);
+        MySurfaceView.enemies.remove(this);
     }
 }
 

@@ -60,9 +60,6 @@ public class Player{
         float pY1 = this.y + diameter;
         float pY2 = this.y - diameter;
 
-//        System.out.println("PX1 : " + pX1 + " PX2 : " + pX2);
-//        System.out.println("PY1 : " + pY1 + " PY2 : " + pY2);
-
         if(objectX >= pX2 && objectX <= pX1){
             if(objectY >= pY2 && objectY <= pY1)
                 return true;
