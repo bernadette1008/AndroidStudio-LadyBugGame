@@ -17,8 +17,6 @@ public class Enemy implements Object{
     int speed = 5;
     float directionX, directionY;
 
-    int hp = 1 * Game.stage;
-
     public Enemy(int d, int width, int height, Player target){
         this.diameter = d;
         this.WIDTH = width;

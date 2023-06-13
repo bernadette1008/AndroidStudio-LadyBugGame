@@ -14,9 +14,24 @@ import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback{
+    private int score;
+
+    private Timer timer;
+
+    TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            score++;
+            System.out.print("isWork?");
+        }
+    };
+
     private boolean isGameOver = false;
+
     static int eCnt = 6;
     public static List<Enemy> enemies;
 
@@ -24,7 +39,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     private Player player;
 
-    long spawnTime = 5000; // 잡몹 소환
+    long spawnTime = 3000; // 잡몹 소환
+    long itemSpawnTime = 5000;
     long elapsedTime = 0; // 경과 시간
     long startTime = System.currentTimeMillis(); // 시작시간
 
@@ -54,35 +70,14 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY){
-                //여기다가 하면 손을 땐 후에만 움직임 폐기처리~
-
-                // 스와이프 동작 처리
-//                float deltaX = e2.getX() - e1.getX();
-//                float deltaY = e2.getY() - e1.getY();
-
-                //플레이어 이동
-
-//                int maxSpeed = 100;
-//
-//                if(Math.abs(deltaX) > maxSpeed){
-//                    if(deltaX > 0){
-//                        player.move(10, 0);
-//                    }else{
-//                        player.move(-10, 0);
-//                    }
-//                }
-//                if(Math.abs(deltaY) > maxSpeed){
-//                    if(deltaY > 0){
-//                        player.move(0, 10);
-//                    }else{
-//                        player.move(0, -10);
-//                    }
-//                }
-//                player.move(deltaX, deltaY);
-
                 return true;
             }
         });
+
+        score = 0;
+        timer = new Timer();
+        timer.schedule(timerTask,0, 100);
+
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
 
@@ -105,7 +100,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 //        gestureDetector.onTouchEvent(event);
         
         //새로운 움직임 코드
-        switch( event.getAction()){
+        switch(event.getAction()){
 
             case MotionEvent.ACTION_DOWN:
                 break;
@@ -169,7 +164,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 long currentTime = System.currentTimeMillis();
                 elapsedTime += currentTime - startTime;
                 startTime = currentTime;
-
                 Paint p = new Paint();
 
                 int randSpawnCnt = (int) (Math.random() * 5 + 1);
@@ -177,10 +171,10 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                     c = mSurfaceHolder.lockCanvas(null);
                     c.drawColor(Color.BLACK);
                     p.setColor(Color.WHITE);
-                    p.setTextSize(50);
+                    p.setTextSize(100);
                     p.setTextAlign(Paint.Align.CENTER);
-                    String XY = String.valueOf(player.getPlayerX())+ ", "+ String.valueOf(player.getPlayerY());
-                    c.drawText(XY,width/2, height/2,p);
+                    String userScore = "SCORE : "+ String.valueOf(score);
+                    c.drawText(userScore,width/5, 110,p);
 
                     synchronized (mSurfaceHolder){
                         if(!isGameOver){
@@ -189,6 +183,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 //                            System.out.println(player.getPlayerY());
                         }
                         else{
+                            timer.cancel();
                             drawGameOverScreen(c);
 
                         }
@@ -228,7 +223,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             c.drawColor(Color.BLACK);
             Paint p = new Paint();
             p.setColor(Color.WHITE);
-            p.setTextSize(50);
+            p.setTextSize(150);
             p.setTextAlign(Paint.Align.CENTER);
             c.drawText("GAME OVER", width/2, height/2, p);
         }
