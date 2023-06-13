@@ -21,7 +21,7 @@ START 버튼을 통해 게임을 시작하고, SCORE 버튼을 통해서는 자�
 
 ![image](https://github.com/bernadette1008/AndroidStudio-LadyBugGame/assets/103907857/0149fa90-b129-4898-b379-9e4af2b2dda4)
 
-적의 추척
+적의 추척(빨간색 - 적, 파란색 - 플레이어)
 
 ![image](https://github.com/bernadette1008/AndroidStudio-LadyBugGame/assets/103907857/7e649d49-6b24-4923-b710-f5d9017f8463)
 
@@ -51,3 +51,30 @@ START 버튼을 통해 게임을 시작하고, SCORE 버튼을 통해서는 자�
 적이 플레이어를 계속해서 추적하는 것이 아닌 스폰 당시의 플레이어의 위치로 일정한 속도로 전진하도록 하였다.
 이런 식으로 만듬으로써 적이 꽤 쌓였을 때도 피하지 못하고 죽어야만 하는 상황이 이전보다 더 적게 나타날 것으로 보이며
 적이 겹쳐 보다 수에 비해서 적어보이던 이전 방식과는 다르게 좀 더 풍성하게 보여 난이도가 꽤 보이는 효과가 있는 것처럼 보인다.
+
+## 23-06-13
+
+![image](https://github.com/bernadette1008/AndroidStudio-LadyBugGame/assets/103907857/c0acd233-dd29-4bcd-be7f-aebb4bbe9677)
+
+스코어와 아이템(초록색 - 아이템)
+
+![image](https://github.com/bernadette1008/AndroidStudio-LadyBugGame/assets/103907857/aeb6c8cd-c747-453b-8fbf-c7c5f7374fbb)
+
+게임 오버 화면 글씨 크기 수정
+
+### -수정사항
+
+스코어를 추가해봤다. 해당 스코어는 100milsecon 마다 1씩 증가하며 좌측 상단에 표시되도록 만들었다.
+또한 이번엔 Item 요소를 추가했다. 적을 잡는 기능을 만든 것은 아니지만 7초마다 아이템이 생성되어 무작위의 속도로 무작위의 위치에서 등장하도록 했다.
+
+또한 게임오버 화면에 글씨를 좀 더 키웠다.
+
+### -수정해야하는 부분
+
+구석에 박혀서 움직이지 않는 두 아이템
+
+아이템이 두개 이상 있을 때 아이템을 먹게되면 게임이 꺼지는 오류
+
+게임 오버 화면에서 다시 시작 버튼이나 메인 메뉴로 돌아가는 버튼
+
+게임 화면에서 뒤로가기 버튼 클릭 후 다시 START 버튼을 누르면 게임이 꺼지는 오류
