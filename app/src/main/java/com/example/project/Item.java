@@ -21,30 +21,42 @@ public class Item implements Object{
         this.HEIGHT = height;
 
         int randSpawn = (int) (Math.random() * 4);
-        int rand = (int) ((Math.random() * 9)-5);
+        int randx = (int) ((Math.random() * 5)+3);
+        int randy = (int) ((Math.random() * 7)+3);
 
         //스폰 위치
+        //상
         if(randSpawn == 0){
             x = (int) (Math.random() * (WIDTH - d) + 3);
             y = 0;
 
-            xInc = (int) (Math.random() * rand);
-            yInc = (int) (Math.random() * 4);
-        }else if(randSpawn == 1){
+            xInc = x > (WIDTH/2) ? (int) (randx * -1) : (int) randx;
+//            xInc = (int) randx;
+            yInc = (int) randy;
+        }
+        //하
+        else if(randSpawn == 1){
             x = (int) (Math.random() * (WIDTH - d) + 3);
             y = HEIGHT;
-            xInc = (int) (Math.random() * rand);
-            yInc = (int) (Math.random() * -4);
-        }else if(randSpawn == 2){
+
+            xInc = x > (WIDTH/2) ? (int) (randx * -1) : (int) randx;
+            yInc = (int) randy*-1;
+        }
+        //좌
+        else if(randSpawn == 2){
             x = 0;
             y = (int) (Math.random() * (HEIGHT - d) + 3);
-            xInc = (int) (Math.random() * 4);
-            yInc = (int) (Math.random() * rand);
-        }else if(randSpawn == 3){
+
+            xInc = (int) randx;
+            yInc = y > (HEIGHT/2) ? (int) (randy*-1) : (int) (randy);
+        }
+        //우
+        else if(randSpawn == 3){
             x = WIDTH;
             y = (int) (Math.random() * (HEIGHT - d) + 3);
-            xInc = (int) (Math.random() * -4);
-            yInc = (int) (Math.random() * rand);
+
+            xInc = (int) randx * -1;
+            yInc = y > (HEIGHT/2) ? (int) (randy*-1) : (int) (randy);
         }
 
     }

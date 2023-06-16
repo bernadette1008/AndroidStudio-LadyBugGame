@@ -201,25 +201,23 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 int randSpawnCnt = (int) (Math.random() * 5 + 1);
                 try{
                     c = mSurfaceHolder.lockCanvas(null);
-                    c.drawColor(Color.BLACK);
-                    p.setColor(Color.WHITE);
-                    p.setTextSize(100);
-                    p.setTextAlign(Paint.Align.CENTER);
-                    String userScore = "SCORE : "+ String.valueOf(score);
-                    c.drawText(userScore,width/5, 110,p);
+                    if(c != null){
+                        c.drawColor(Color.BLACK);
+                        p.setColor(Color.WHITE);
+                        p.setTextSize(100);
+                        p.setTextAlign(Paint.Align.CENTER);
+                        String userScore = "SCORE : "+ String.valueOf(score);
+                        c.drawText(userScore,width/5, 110,p);
 
-                    synchronized (mSurfaceHolder){
-                        if(!isGameOver){
-                            drawGameScreen(c);
-//                            System.out.println(player.getPlayerX());
-//                            System.out.println(player.getPlayerY());
+                        synchronized (mSurfaceHolder){
+                            if(!isGameOver){
+                                drawGameScreen(c);
+                            }
+                            else{
+                                timer.cancel();
+                                drawGameOverScreen(c);
+                            }
                         }
-                        else{
-                            timer.cancel();
-                            drawGameOverScreen(c);
-
-                        }
-
                     }
                 } finally {
                     if (c != null) {
