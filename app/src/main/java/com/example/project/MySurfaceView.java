@@ -26,7 +26,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         @Override
         public void run() {
             score++;
-            System.out.print("isWork?");
         }
     };
 
@@ -238,27 +237,34 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 //                }
 //                elapsedTime = 0;
 //            }
-            Iterator<Enemy> enemyIterator = enemies.iterator();
-            while(enemyIterator.hasNext()){
-                Enemy enemy = enemyIterator.next();
-                enemy.paintObject(c, player);
-                
-                //플레이어가 적과 닿았을 때
-                if(enemy.encounter(player)){
-                    isGameOver = true;
+            synchronized (enemies) {
+                Iterator<Enemy> enemyIterator = enemies.iterator();
+                while (enemyIterator.hasNext()) {
+                    Enemy enemy = enemyIterator.next();
+                    enemy.paintObject(c, player);
+
+                    // 플레이어가 적과 닿았을 때
+                    if (enemy.encounter(player)) {
+                        isGameOver = true;
+                    }
                 }
             }
-            Iterator<Item> itemIterator = items.iterator();
-            while(itemIterator.hasNext()){
-                Item item = itemIterator.next();
-                item.paintObject(c, player);
-                
-                //플레이어가 아이템을 먹었을 때
-                if(item.encounter(player)){
-                    item.clearObject(c);
+
+            synchronized (items) {
+                if (!items.isEmpty()) {
+                    Iterator<Item> itemIterator = items.iterator();
+                    while (itemIterator.hasNext()) {
+                        Item item = itemIterator.next();
+                        if (item.encounter(player)) {
+                            itemIterator.remove();
+                        } else {
+                            item.paintObject(c, player);
+                        }
+                    }
                 }
             }
-            if(player != null){
+
+            if (player != null) {
                 player.paintPlayer(c);
             }
 

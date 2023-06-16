@@ -109,11 +109,11 @@ public class Enemy implements Object{
 
     @Override
     public void clearObject(Canvas g){
-//        Paint paint = new Paint();
-//        Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
-//        paint.setXfermode(xmode);
-//        g.drawCircle(x, y, diameter, paint);
-        MySurfaceView.enemies.remove(this);
+        Paint paint = new Paint();
+        Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+        paint.setXfermode(xmode);
+        g.drawCircle(x, y, diameter, paint);
+//        MySurfaceView.enemies.remove(this);
     }
 }
 

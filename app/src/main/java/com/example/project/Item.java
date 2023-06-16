@@ -85,6 +85,6 @@ public class Item implements Object{
 //        paint.setXfermode(xmode);
 //        g.drawCircle(x, y, diameter, paint);
 
-        MySurfaceView.items.remove(this);
+
     }
 }
