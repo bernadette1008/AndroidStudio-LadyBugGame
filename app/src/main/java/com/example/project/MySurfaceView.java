@@ -269,7 +269,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 //            c.drawText("GAME OVER", width/2, height/2, p);
             Intent intent = new Intent(context, Gameover.class);
             context.startActivity(intent);
-//            ((Activity) context).finish();
+            ((Activity) context).finish();
         }
         public void setRunning(boolean b){
             mRun = b;
