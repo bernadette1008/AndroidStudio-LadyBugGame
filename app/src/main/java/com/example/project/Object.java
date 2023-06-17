@@ -12,7 +12,7 @@ public interface Object {
     int WIDTH = 0, HEIGHT = 0;
     
     // 오브젝트의 사이즈 (기본 값 20)
-    int diameter = 20;
+    int radius = 20;
     
     // 오브젝트의 현재 위치
     float x = 0, y = 0;
