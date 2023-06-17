@@ -25,19 +25,19 @@ public interface Object {
         Paint paint = new Paint();
 
         paint.setColor(Color.rgb(255,255,255));
-        g.drawCircle(x, y, diameter, paint);
+        g.drawCircle(x, y, radius, paint);
     }
 
     default void clearObject(Canvas g){
         Paint paint = new Paint();
         Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
         paint.setXfermode(xmode);
-        g.drawCircle(x, y, diameter, paint);
+        g.drawCircle(x, y, radius, paint);
     }
 
     // 플레이어와 부딪쳤는지 체크
     default boolean encounter(Player player){
-        if(player.isTouched(this.x, this.y, diameter))
+        if(player.isTouched(this.x, this.y, radius))
             return true;
 
         return false;
