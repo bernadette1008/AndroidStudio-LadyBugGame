@@ -11,13 +11,13 @@ public class Player{
     int dmg = 1;
 //    int power = 2; // 필살기 사용 가능 횟수
     float x, y;
-    int diameter;
+    int radius; //지름이 아닌 반지름임
 
     public Player(int d, int width, int height, int x, int y){
         WIDTH = width;
         HEIGHT = height;
 
-        diameter = d;
+        radius = d;
 
         this.x = x;
         this.y = y;
@@ -49,21 +49,21 @@ public class Player{
         Paint paint = new Paint();
 
         paint.setColor(Color.rgb(0,0,255));
-        g.drawCircle(x, y, diameter, paint);
+        g.drawCircle(x, y, radius, paint);
     }
 
     // 플레이어와 오브젝트가 부딪쳤는지 체크
-    public boolean isTouched(float objectX, float objectY){
-        float pX1 = this.x + diameter;
-        float pX2 = this.x - diameter;
-
-        float pY1 = this.y + diameter;
-        float pY2 = this.y - diameter;
-
-        if(objectX >= pX2 && objectX <= pX1){
-            if(objectY >= pY2 && objectY <= pY1)
-                return true;
-        }
+    public boolean isTouched(float objectX, float objectY, int objectR){
+        //두 원 사이의 거리
+        double pointLen = Math.sqrt(
+                Math.pow(getPlayerX() - objectX, 2) + Math.pow(getPlayerY() - objectY, 2)
+        );
+        //두 원의 반지름 합계
+        int twoRadius = (objectR) + (radius);
+    
+        //충돌 감지
+        if(pointLen <= twoRadius)
+            return true;
 
         return false;
     }

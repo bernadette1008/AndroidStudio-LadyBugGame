@@ -9,14 +9,14 @@ import android.graphics.Xfermode;
 
 public class Item implements Object{
     int x, y;
-    int diameter;
+    int radius;
 
     int xInc, yInc;
 
     int WIDTH, HEIGHT;
 
     public Item(int d, int width, int height){
-        this.diameter = d;
+        this.radius = d;
         this.WIDTH = width;
         this.HEIGHT = height;
 
@@ -78,12 +78,12 @@ public class Item implements Object{
         }
 
         paint.setColor(Color.rgb(0,255,0));
-        g.drawCircle(x, y, diameter, paint);
+        g.drawCircle(x, y, radius, paint);
     }
 
     @Override
     public boolean encounter(Player player){
-        if(player.isTouched(this.x, this.y))
+        if(player.isTouched(this.x, this.y, radius))
             return true;
 
         return false;
@@ -91,12 +91,9 @@ public class Item implements Object{
 
     @Override
     public void clearObject(Canvas g){
-        //해당 코드는 그냥 안보이도록 수정하는 거 같다.
-//        Paint paint = new Paint();
-//        Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
-//        paint.setXfermode(xmode);
-//        g.drawCircle(x, y, diameter, paint);
-
-
+        Paint paint = new Paint();
+        Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+        paint.setXfermode(xmode);
+        g.drawCircle(x, y, radius, paint);
     }
 }

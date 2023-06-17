@@ -63,8 +63,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     long spawnTime = 5000; // 잡몹 소환
     long itemSpawnTime = 7000;
-    long elapsedTime = 0; // 경과 시간
-    long startTime = System.currentTimeMillis(); // 시작시간
 
     static int width, height;
 
@@ -118,12 +116,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         holder.addCallback(this);
 
         thread = new MyThread(holder);
-
-
-
-
-
-
     }
 
     @Override
@@ -206,7 +198,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                         p.setColor(Color.WHITE);
                         p.setTextSize(100);
                         p.setTextAlign(Paint.Align.CENTER);
-                        String userScore = "SCORE : "+ String.valueOf(score);
+                        String userScore = "SCORE : "+ (score);
                         c.drawText(userScore,width/5, 110,p);
 
                         synchronized (mSurfaceHolder){
@@ -228,13 +220,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
 
         private void drawGameScreen(Canvas c){
-//            if(elapsedTime >= spawnTime){
-//                for (int i = 0; i < eCnt; i++){
-//                    Enemy eny = new Enemy(50, width, height, player);
-//                    enemies.add(eny);
-//                }
-//                elapsedTime = 0;
-//            }
             synchronized (enemies) {
                 Iterator<Enemy> enemyIterator = enemies.iterator();
                 while (enemyIterator.hasNext()) {

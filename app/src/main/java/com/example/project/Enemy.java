@@ -11,14 +11,14 @@ import android.widget.Toast;
 public class Enemy implements Object{
     float x, y;
 
-    int diameter;
+    int radius;
     int WIDTH = 1280, HEIGHT = 1920;
 
     int speed = 5;
     float directionX, directionY;
 
     public Enemy(int d, int width, int height, Player target){
-        this.diameter = d;
+        this.radius = d;
         this.WIDTH = width;
         this.HEIGHT = height;
 
@@ -55,27 +55,6 @@ public class Enemy implements Object{
     public void paintObject(Canvas g, Player target){
         Paint paint = new Paint();
 
-//        if (x < 0 || x > (WIDTH - diameter))
-//            xInc = -xInc;
-//        if(y < 0 || y > ((HEIGHT) - diameter)){
-//            remove(g);
-//        }
-
-//        float targetX = target.getPlayerX();
-//        float targetY = target.getPlayerY();
-
-//        if(targetX - this.x > 0){
-//            x += xInc;
-//        }else{
-//            x -= xInc;
-//        }
-//
-//        if(targetY - this.y > 0){
-//            y += yInc;
-//        }else{
-//            y -= yInc;
-//        }
-
         this.x += this.directionX * this.speed;
         this.y += this.directionY * this.speed;
 
@@ -96,12 +75,12 @@ public class Enemy implements Object{
 //        y += yInc;
 
         paint.setColor(Color.rgb(255,0,0));
-        g.drawCircle(x, y, diameter, paint);
+        g.drawCircle(x, y, radius, paint);
     }
 
     @Override
     public boolean encounter(Player player){
-        if(player.isTouched(this.x, this.y))
+        if(player.isTouched(this.x, this.y, this.radius))
             return true;
 
         return false;
@@ -112,8 +91,7 @@ public class Enemy implements Object{
         Paint paint = new Paint();
         Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
         paint.setXfermode(xmode);
-        g.drawCircle(x, y, diameter, paint);
-//        MySurfaceView.enemies.remove(this);
+        g.drawCircle(x, y, radius, paint);
     }
 }
 

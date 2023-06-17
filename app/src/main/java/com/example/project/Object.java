@@ -37,7 +37,7 @@ public interface Object {
 
     // 플레이어와 부딪쳤는지 체크
     default boolean encounter(Player player){
-        if(player.isTouched(this.x, this.y))
+        if(player.isTouched(this.x, this.y, diameter))
             return true;
 
         return false;
