@@ -1,6 +1,8 @@
 package com.example.project;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,6 +20,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback{
+    private Context context;
+
     private int score;
 
     private Timer timer;
@@ -87,6 +91,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     public MySurfaceView(Context context) {
         super(context);
+        this.context = context;
+
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY){
@@ -208,6 +214,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                             else{
                                 timer.cancel();
                                 drawGameOverScreen(c);
+                                break;
                             }
                         }
                     }
@@ -254,12 +261,15 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
 
         private void drawGameOverScreen(Canvas c){
-            c.drawColor(Color.BLACK);
-            Paint p = new Paint();
-            p.setColor(Color.WHITE);
-            p.setTextSize(150);
-            p.setTextAlign(Paint.Align.CENTER);
-            c.drawText("GAME OVER", width/2, height/2, p);
+//            c.drawColor(Color.BLACK);
+//            Paint p = new Paint();
+//            p.setColor(Color.WHITE);
+//            p.setTextSize(150);
+//            p.setTextAlign(Paint.Align.CENTER);
+//            c.drawText("GAME OVER", width/2, height/2, p);
+            Intent intent = new Intent(context, Gameover.class);
+            context.startActivity(intent);
+//            ((Activity) context).finish();
         }
         public void setRunning(boolean b){
             mRun = b;
