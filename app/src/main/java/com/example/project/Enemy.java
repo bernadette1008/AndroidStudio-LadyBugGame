@@ -67,13 +67,6 @@ public class Enemy implements Object{
             return;
         }
 
-
-        if(encounter(target))
-            System.out.println("Game Over");
-
-//        x += xInc;
-//        y += yInc;
-
         paint.setColor(Color.rgb(255,0,0));
         g.drawCircle(x, y, radius, paint);
     }
@@ -81,6 +74,22 @@ public class Enemy implements Object{
     @Override
     public boolean encounter(Player player){
         if(player.isTouched(this.x, this.y, this.radius))
+            return true;
+
+        return false;
+    }
+
+    @Override
+    public boolean attackedByAT(AT at){
+        if(at.attackEnemy(this.x, this.y, radius))
+            return true;
+
+        return false;
+    }
+
+    @Override
+    public boolean attackedByMF(MagneticField mf){
+        if(mf.attackEnemy(this.x, this.y, radius))
             return true;
 
         return false;

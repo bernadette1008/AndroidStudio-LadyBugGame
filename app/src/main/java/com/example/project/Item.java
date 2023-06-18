@@ -14,11 +14,15 @@ public class Item implements Object{
     int xInc, yInc;
 
     int WIDTH, HEIGHT;
+    
+    int itemType = 0; // 1:AT필드 2:자기장
 
     public Item(int d, int width, int height){
         this.radius = d;
         this.WIDTH = width;
         this.HEIGHT = height;
+
+        this.itemType = (int) (Math.random() * 2)+1;
 
         int randSpawn = (int) (Math.random() * 4);
         int randx = (int) ((Math.random() * 5)+3);
@@ -62,7 +66,7 @@ public class Item implements Object{
     }
 
     @Override
-    public void paintObject(Canvas g, Player target){
+    public void paintObject(Canvas g){
         Paint paint = new Paint();
 
         this.x += xInc;
@@ -77,7 +81,10 @@ public class Item implements Object{
             return;
         }
 
-        paint.setColor(Color.rgb(0,255,0));
+        if(itemType == 1)
+            paint.setColor(Color.rgb(178,235,244));
+        else if(itemType == 2)
+            paint.setColor(Color.rgb(209,178,255));
         g.drawCircle(x, y, radius, paint);
     }
 

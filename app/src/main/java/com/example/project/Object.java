@@ -28,6 +28,13 @@ public interface Object {
         g.drawCircle(x, y, radius, paint);
     }
 
+    default void paintObject(Canvas g){
+        Paint paint = new Paint();
+
+        paint.setColor(Color.rgb(255,255,255));
+        g.drawCircle(x, y, radius, paint);
+    }
+
     default void clearObject(Canvas g){
         Paint paint = new Paint();
         Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
@@ -39,6 +46,25 @@ public interface Object {
     default boolean encounter(Player player){
         if(player.isTouched(this.x, this.y, radius))
             return true;
+
+        return false;
+    }
+
+    default boolean attackedByAT(AT at){
+        if(at.attackEnemy(this.x, this.y, radius))
+            return true;
+
+        return false;
+    }
+
+    default boolean attackedByMF(MagneticField mf){
+        if(mf.attackEnemy(this.x, this.y, radius))
+            return true;
+
+        return false;
+    }
+
+    default boolean attackedByMF(){
 
         return false;
     }
