@@ -22,7 +22,11 @@ import java.util.TimerTask;
 public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback{
     private Context context;
 
+    private String userName = "user";
+
     private int score;
+
+    private DatabaseHelper dbHelper;
 
     private Timer timer;
 
@@ -102,6 +106,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     public MySurfaceView(Context context) {
         super(context);
         this.context = context;
+
+        dbHelper = new DatabaseHelper(context);
 
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
             @Override
@@ -342,6 +348,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 //            p.setTextSize(150);
 //            p.setTextAlign(Paint.Align.CENTER);
 //            c.drawText("GAME OVER", width/2, height/2, p);
+            dbHelper.saveScore(userName, score);
             Intent intent = new Intent(context, Gameover.class);
             context.startActivity(intent);
             ((Activity) context).finish();

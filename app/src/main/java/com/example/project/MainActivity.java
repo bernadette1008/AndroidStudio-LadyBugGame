@@ -18,12 +18,21 @@ public class MainActivity extends AppCompatActivity {
 //        surfaceView = new MySurfaceView(this);
 //        setContentView(surfaceView);
         Button startButton = (Button) findViewById(R.id.start);
+        Button scoreButton = (Button) findViewById(R.id.score);
 
         startButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Game.class);
+                startActivity(intent);
+            }
+        });
+
+        scoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Score.class);
                 startActivity(intent);
             }
         });
