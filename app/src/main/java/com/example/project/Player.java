@@ -1,7 +1,10 @@
 package com.example.project;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 
 public class Player{
@@ -12,12 +15,27 @@ public class Player{
 //    int power = 2; // 필살기 사용 가능 횟수
     float x, y;
     int radius; //지름이 아닌 반지름임
+    Bitmap playerIcon;
 
-    public Player(int d, int width, int height, int x, int y){
+    private float rotationAngle = 0.0f;
+
+    public void pRotate(float angle){
+        rotationAngle = angle;
+
+        if(rotationAngle < 0){
+            rotationAngle += 360;
+        } else if(rotationAngle >= 360){
+            rotationAngle -= 360;
+        }
+    }
+
+    public Player(int d, int width, int height, int x, int y, Bitmap playerIcon){
         WIDTH = width;
         HEIGHT = height;
 
         radius = d;
+
+        this.playerIcon = playerIcon;
 
         this.x = x;
         this.y = y;
@@ -47,9 +65,16 @@ public class Player{
 
     public void paintPlayer(Canvas g){
         Paint paint = new Paint();
+        paint.setColor(Color.argb(0,0,0,255));
 
-        paint.setColor(Color.rgb(0,0,255));
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotationAngle, x, y);
+
         g.drawCircle(x, y, radius, paint);
+        Bitmap resizePlayerIcon = Bitmap.createScaledBitmap(playerIcon, radius*3, radius*3, false);
+
+        Bitmap rotatedPlayerIcon = Bitmap.createBitmap(resizePlayerIcon, 0, 0, resizePlayerIcon.getWidth(), resizePlayerIcon.getHeight(), matrix, true);
+        g.drawBitmap(rotatedPlayerIcon, (float) (x-(radius*1.5)), (float) (y-(radius*1.5)), null);
     }
 
     // 플레이어와 오브젝트가 부딪쳤는지 체크

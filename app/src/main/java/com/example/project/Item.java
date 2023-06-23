@@ -1,10 +1,13 @@
 package com.example.project;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.Xfermode;
 
 public class Item implements Object{
@@ -17,7 +20,11 @@ public class Item implements Object{
     
     int itemType = 0; // 1:AT필드 2:자기장
 
-    public Item(int d, int width, int height){
+    int type;
+
+    Bitmap itemIcon;
+
+    public Item(int d, int width, int height, Bitmap itemIcon1, Bitmap itemIcon2){
         this.radius = d;
         this.WIDTH = width;
         this.HEIGHT = height;
@@ -27,6 +34,15 @@ public class Item implements Object{
         int randSpawn = (int) (Math.random() * 4);
         int randx = (int) ((Math.random() * 5)+3);
         int randy = (int) ((Math.random() * 7)+3);
+
+        type = (int) (Math.random()*2);
+
+        if(itemType == 1){
+            this.itemIcon = itemIcon1;
+        }
+        else{
+            this.itemIcon = itemIcon2;
+        }
 
         //스폰 위치
         //상
@@ -81,11 +97,16 @@ public class Item implements Object{
             return;
         }
 
-        if(itemType == 1)
+        if(itemType == 1){
             paint.setColor(Color.rgb(178,235,244));
-        else if(itemType == 2)
+        }
+        else if(itemType == 2){
             paint.setColor(Color.rgb(209,178,255));
+        }
+
+        Bitmap resizePlayerIcon = Bitmap.createScaledBitmap(itemIcon, radius*3, radius*3, false);
         g.drawCircle(x, y, radius, paint);
+        g.drawBitmap(resizePlayerIcon, (float) (x-(radius*1.5)), (float) (y-(radius*1.5)), null);
     }
 
     @Override

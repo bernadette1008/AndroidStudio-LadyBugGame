@@ -3,6 +3,8 @@ package com.example.project;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -28,6 +30,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     private DatabaseHelper dbHelper;
 
+    Bitmap itemBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.at_icon);
+    Bitmap itemBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.mf_icon);
+
     private Timer timer;
 
     TimerTask scoreTask = new TimerTask() {
@@ -50,7 +55,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     TimerTask itemSpawn = new TimerTask() {
         @Override
         public void run() {
-            Item item = new Item(50, width, height);
+            Item item = new Item(50, width, height, itemBitmap1, itemBitmap2);
             items.add(item);
         }
     };
@@ -71,6 +76,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     private MyThread thread;
 
     private Player player;
+    Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_icon);
 
     long spawnTime = 5000; // 잡몹 소환
     long itemSpawnTime = 7000;
@@ -120,7 +126,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         height = getScreenHeight(context);
 
         //플레이어 생성
-        player = new Player(50, width, height, width/2, height/2);
+        player = new Player(50, width, height, width/2, height/2, playerBitmap);
 
         System.out.println("width : "+ width + " height : "+ height);
 
@@ -156,6 +162,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 //여기에 이동 구현
                 float deltaX = event.getX() - preX;
                 float deltaY = event.getY() - preY;
+                float newRotation = (float) Math.toDegrees(Math.atan2(deltaX, -deltaY));
+                player.pRotate(newRotation);
                 player.move(deltaX, deltaY);
                 break;
             case MotionEvent.ACTION_UP:
@@ -164,7 +172,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         preX = event.getX();
         preY = event.getY();
         gestureDetector.onTouchEvent(event);
-
         return true;
     }
 
@@ -178,8 +185,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
-        //Ball.WIDTH = width;
-        //Ball.HEIGHT = height;
+
     }
 
     @Override
