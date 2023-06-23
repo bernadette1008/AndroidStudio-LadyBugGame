@@ -21,74 +21,46 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback{
+public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     private Context context;
 
     private String userName = "user";
-
     private int score;
-
     private DatabaseHelper dbHelper;
 
-    Bitmap itemBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.at_icon);
-    Bitmap itemBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.mf_icon);
+    private Bitmap itemBitmap1;
+    private Bitmap itemBitmap2;
 
     private Timer timer;
-
-    TimerTask scoreTask = new TimerTask() {
-        @Override
-        public void run() {
-            score++;
-        }
-    };
-
-    TimerTask enemySpawn = new TimerTask(){
-        @Override
-        public void run(){
-            for (int i = 0; i < eCnt; i++){
-                Enemy eny = new Enemy(50, width, height, player);
-                enemies.add(eny);
-            }
-        }
-    };
-
-    TimerTask itemSpawn = new TimerTask() {
-        @Override
-        public void run() {
-            Item item = new Item(50, width, height, itemBitmap1, itemBitmap2);
-            items.add(item);
-        }
-    };
-
-    public void setTimerTask(Timer t, TimerTask task, long delay, long period){
-        t.schedule(task, delay, period);
-    }
+    private TimerTask scoreTask;
+    private TimerTask enemySpawn;
+    private TimerTask itemSpawn;
 
     private boolean isGameOver = false;
 
-    static int eCnt = 6;
-    public static List<Enemy> enemies;
-    public static List<Item> items;
+    private static int eCnt = 6;
+    private List<Enemy> enemies;
+    private List<Item> items;
 
-    public AT myAT;
-    public List<MagneticField> myMFs;
+    private AT myAT;
+    private List<MagneticField> myMFs;
 
     private MyThread thread;
 
     private Player player;
-    Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_icon);
+    private Bitmap playerBitmap;
 
-    long spawnTime = 5000; // 잡몹 소환
-    long itemSpawnTime = 7000;
+    private long spawnTime = 5000;
+    private long itemSpawnTime = 7000;
 
-    boolean isATOn = false;
-    boolean isMFOn = false;
+    private boolean isATOn = false;
+    private boolean isMFOn = false;
 
-    long itemOnTime = 3500; //아이템의 지속시간 3.5초
-    long ATElapsedTime = 0;
-    long ATStartTime;
+    private long itemOnTime = 3500;
+    private long ATElapsedTime = 0;
+    private long ATStartTime;
 
-    static int width, height;
+    private static int width, height;
 
     private GestureDetector gestureDetector;
 
@@ -109,15 +81,19 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         return displayMetrics.heightPixels;
     }
 
+    public void setTimerTask(Timer timer, TimerTask task, long delay, long period) {
+        timer.schedule(task, delay, period);
+    }
+
     public MySurfaceView(Context context) {
         super(context);
         this.context = context;
 
         dbHelper = new DatabaseHelper(context);
 
-        gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
+        gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY){
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 return true;
             }
         });
@@ -125,19 +101,44 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         width = getScreenWidth(context);
         height = getScreenHeight(context);
 
-        //플레이어 생성
-        player = new Player(50, width, height, width/2, height/2, playerBitmap);
+        playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_icon);
+        player = new Player(50, width, height, width / 2, height / 2, playerBitmap);
 
-        System.out.println("width : "+ width + " height : "+ height);
+        itemBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.at_icon);
+        itemBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.mf_icon);
 
         enemies = new ArrayList<>();
         items = new ArrayList<>();
         myMFs = new ArrayList<>();
 
-
         score = 0;
         timer = new Timer();
-//        timer.schedule(scoreTask,0, 100);
+
+        scoreTask = new TimerTask() {
+            @Override
+            public void run() {
+                score++;
+            }
+        };
+
+        enemySpawn = new TimerTask() {
+            @Override
+            public void run() {
+                for (int i = 0; i < eCnt; i++) {
+                    Enemy eny = new Enemy(50, width, height, player);
+                    enemies.add(eny);
+                }
+            }
+        };
+
+        itemSpawn = new TimerTask() {
+            @Override
+            public void run() {
+                Item item = new Item(50, width, height, itemBitmap1, itemBitmap2);
+                items.add(item);
+            }
+        };
+
         setTimerTask(timer, scoreTask, 0, 100);
         setTimerTask(timer, enemySpawn, 0, spawnTime);
         setTimerTask(timer, itemSpawn, 0, itemSpawnTime);
@@ -149,17 +150,11 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event){
-        //폐기한 움직임 코드
-//        gestureDetector.onTouchEvent(event);
-        
-        //새로운 움직임 코드
-        switch(event.getAction()){
-
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 break;
             case MotionEvent.ACTION_MOVE:
-                //여기에 이동 구현
                 float deltaX = event.getX() - preX;
                 float deltaY = event.getY() - preY;
                 float newRotation = (float) Math.toDegrees(Math.atan2(deltaX, -deltaY));
@@ -175,7 +170,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         return true;
     }
 
-    public MyThread getThread(){
+    public MyThread getThread() {
         return thread;
     }
 
@@ -193,49 +188,44 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         boolean retry = true;
 
         thread.setRunning(false);
-        while(retry){
-            try{
+        while (retry) {
+            try {
                 thread.join();
                 retry = false;
-            }catch (InterruptedException e){
+            } catch (InterruptedException e) {
 
             }
         }
     }
 
-    public class MyThread extends Thread{
+    public class MyThread extends Thread {
         private boolean mRun = false;
         private SurfaceHolder mSurfaceHolder;
 
-        public MyThread(SurfaceHolder surfaceHolder){
+        public MyThread(SurfaceHolder surfaceHolder) {
             mSurfaceHolder = surfaceHolder;
         }
 
         @Override
-        public void run(){
-            while (mRun){
+        public void run() {
+            while (mRun) {
                 Canvas c = null;
-//                long currentTime = System.currentTimeMillis();
-//                elapsedTime += currentTime - startTime;
-//                startTime = currentTime;
                 Paint p = new Paint();
 
-                int randSpawnCnt = (int) (Math.random() * 5 + 1);
-                try{
+                try {
                     c = mSurfaceHolder.lockCanvas(null);
-                    if(c != null){
+                    if (c != null) {
                         c.drawColor(Color.BLACK);
                         p.setColor(Color.WHITE);
                         p.setTextSize(100);
                         p.setTextAlign(Paint.Align.CENTER);
-                        String userScore = "SCORE : "+ (score);
+                        String userScore = "SCORE : " + score;
 
-                        synchronized (mSurfaceHolder){
-                            if(!isGameOver){
+                        synchronized (mSurfaceHolder) {
+                            if (!isGameOver) {
                                 drawGameScreen(c);
-                                c.drawText(userScore,width/5, 110,p);
-                            }
-                            else{
+                                c.drawText(userScore, width/3, 110, p);
+                            } else {
                                 timer.cancel();
                                 drawGameOverScreen(c);
                                 break;
@@ -250,35 +240,27 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             }
         }
 
-        private void drawGameScreen(Canvas c){
+        private void drawGameScreen(Canvas c) {
             synchronized (enemies) {
-                Iterator<Enemy> enemyIterator = enemies.iterator();
-                while (enemyIterator.hasNext()) {
+                for (Iterator<Enemy> enemyIterator = enemies.iterator(); enemyIterator.hasNext(); ) {
                     Enemy enemy = enemyIterator.next();
                     enemy.paintObject(c, player);
 
-                    // 플레이어가 적과 닿았을 때
                     if (enemy.encounter(player) && !isATOn) {
-
                         isGameOver = true;
                     }
-                    if (isATOn){
-                        if(enemy.attackedByAT(myAT)){
-                            enemyIterator.remove();
-                            score += 10;
-                        }
+
+                    if (isATOn && enemy.attackedByAT(myAT)) {
+                        enemyIterator.remove();
+                        score += 10;
                     }
-                    if (isMFOn){
-                        synchronized (myMFs){
-                            Iterator<MagneticField> mfIterator = myMFs.iterator();
-                            while(mfIterator.hasNext()){
-                                MagneticField mf = mfIterator.next();
-                                if(enemy.attackedByMF(mf)){
-                                    synchronized (enemies){
-                                        enemyIterator.remove();
-                                    }
-                                    score += 10;
-                                }
+
+                    if (isMFOn) {
+                        for (Iterator<MagneticField> mfIterator = myMFs.iterator(); mfIterator.hasNext(); ) {
+                            MagneticField mf = mfIterator.next();
+                            if (enemy.attackedByMF(mf)) {
+                                enemyIterator.remove();
+                                score += 10;
                             }
                         }
                     }
@@ -287,21 +269,10 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
             synchronized (items) {
                 if (!items.isEmpty()) {
-                    Iterator<Item> itemIterator = items.iterator();
-                    while (itemIterator.hasNext()) {
+                    for (Iterator<Item> itemIterator = items.iterator(); itemIterator.hasNext(); ) {
                         Item item = itemIterator.next();
                         if (item.encounter(player)) {
-                            if(item.itemType == 1){//AT
-                                isATOn = true;
-                                ATStartTime = System.currentTimeMillis();
-                                ATElapsedTime = 0;
-                                myAT = new AT(player);
-                            }
-                            else {//자기장
-                                isMFOn = true;
-                                myMFs.add(new MagneticField(player, 0L, System.currentTimeMillis()));
-
-                            }
+                            handleItemEncounter(item);
                             itemIterator.remove();
                         } else {
                             item.paintObject(c);
@@ -310,56 +281,67 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 }
             }
 
-            if(isATOn){
+            updateAndDrawAT(c);
+            updateAndDrawMFs(c);
+
+            if (player != null) {
+                player.paintPlayer(c);
+            }
+        }
+
+        private void handleItemEncounter(Item item) {
+            if (item.itemType == 1) {
+                isATOn = true;
+                ATStartTime = System.currentTimeMillis();
+                ATElapsedTime = 0;
+                myAT = new AT(player);
+            } else {
+                isMFOn = true;
+                myMFs.add(new MagneticField(player, 0L, System.currentTimeMillis()));
+            }
+        }
+
+        private void updateAndDrawAT(Canvas c) {
+            if (isATOn) {
                 long currentTime = System.currentTimeMillis();
                 ATElapsedTime += currentTime - ATStartTime;
                 ATStartTime = currentTime;
-                if(ATElapsedTime <= itemOnTime){
+                if (ATElapsedTime <= itemOnTime) {
                     myAT.moveObject(player);
                     myAT.paintObject(c);
-                }else{
+                } else {
                     myAT = null;
                     isATOn = false;
                 }
             }
+        }
 
-            synchronized (myMFs){
-                if(isMFOn){
-                    Iterator<MagneticField> mfIterator = myMFs.iterator();
-                    int cnt = 0;
-                    while(mfIterator.hasNext()){
+        private void updateAndDrawMFs(Canvas c) {
+            synchronized (myMFs) {
+                if (isMFOn) {
+                    for (Iterator<MagneticField> mfIterator = myMFs.iterator(); mfIterator.hasNext(); ) {
                         MagneticField mf = mfIterator.next();
                         long currentTime = System.currentTimeMillis();
                         mf.mfElapsedTime += currentTime - mf.mfStartTime;
                         mf.mfStartTime = currentTime;
-                        if(mf.mfElapsedTime <= itemOnTime){
+                        if (mf.mfElapsedTime <= itemOnTime) {
                             mf.paintObject(c);
-                        }else{
+                        } else {
                             mfIterator.remove();
                         }
                     }
                 }
             }
-
-            if (player != null) {
-                player.paintPlayer(c);
-            }
-
         }
 
-        private void drawGameOverScreen(Canvas c){
-//            c.drawColor(Color.BLACK);
-//            Paint p = new Paint();
-//            p.setColor(Color.WHITE);
-//            p.setTextSize(150);
-//            p.setTextAlign(Paint.Align.CENTER);
-//            c.drawText("GAME OVER", width/2, height/2, p);
+        private void drawGameOverScreen(Canvas c) {
             dbHelper.saveScore(userName, score);
             Intent intent = new Intent(context, Gameover.class);
             context.startActivity(intent);
             ((Activity) context).finish();
         }
-        public void setRunning(boolean b){
+
+        public void setRunning(boolean b) {
             mRun = b;
         }
     }
