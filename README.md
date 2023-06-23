@@ -144,3 +144,27 @@ sqlite를 연동하여 점수를 저장한 모습이다.
 그리고 설정은 오디오 설정을 할 수 있도록 할려고 했지만, 해당 게임에는 사운드가 없어서 없애버렸다.
 
 따라서 이상으로 해당 게임 제작을 끝마친다.
+
+## 23-6-23
+
+### -수정사항
+
+기능적인 부분은 19일날 마쳤는데 추가하면 좋을게 있어서 추가했다.
+
+## -플레이어 아이콘
+
+![image](https://github.com/bernadette1008/AndroidStudio-LadyBugGame/assets/103907857/6b7d0a66-a0af-4026-98d2-e7cd8deb6259)
+
+플레이어 아이콘
+
+## - 아이템 아이콘
+
+![image](https://github.com/bernadette1008/AndroidStudio-LadyBugGame/assets/103907857/905669bc-d6c4-4ea4-9b57-7470dc0c8efc)
+
+자기장 아이템
+
+![image](https://github.com/bernadette1008/AndroidStudio-LadyBugGame/assets/103907857/64fc42f2-798e-4bdb-86e8-20993bad6776)
+
+AT필드 아이템
+
+
