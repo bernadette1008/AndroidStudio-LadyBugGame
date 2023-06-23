@@ -157,6 +157,8 @@ sqlite를 연동하여 점수를 저장한 모습이다.
 
 플레이어 아이콘
 
+해당 아이콘은 손가락으로 플레이어를 움직임에 따라 이미지가 회전한다.
+
 ## - 아이템 아이콘
 
 ![image](https://github.com/bernadette1008/AndroidStudio-LadyBugGame/assets/103907857/905669bc-d6c4-4ea4-9b57-7470dc0c8efc)
